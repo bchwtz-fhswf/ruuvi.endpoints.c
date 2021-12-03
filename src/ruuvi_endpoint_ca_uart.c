@@ -5,8 +5,6 @@
 #include <string.h>
 #include <stdbool.h>
 
-#if RE_CA_ENABLED
-
 #define U16_LSB_MASK    0x00FF
 #define U16_MSB_MASK    0xFF00
 #define U16_MSB_OFFSET  8
@@ -16,33 +14,6 @@
 #define I8_MAX (127U)
 #define I8_MIN (-128)
 #define U8_OVERFLOW (256)
-
-/** @brief serialise up to U64 into given buffer, MSB first. */
-static inline void u64_to_array (const uint64_t u64,
-                                 uint8_t * const array,
-                                 uint8_t bytes)
-{
-    const uint8_t offset = bytes - 1;
-
-    while (bytes--)
-    {
-        array[offset - bytes] = (u64 >> (8U * bytes)) & 0xFFU;
-    }
-}
-
-/** @brief serialise given buffer to u64, MSB first. */
-static inline uint64_t array_to_u64 (const uint8_t * const array, uint8_t bytes)
-{
-    const uint8_t offset = bytes - 1;
-    uint64_t rvalue = 0;
-
-    while (bytes--)
-    {
-        rvalue += (uint64_t) array[bytes] << ( (offset - bytes) * 8U);
-    }
-
-    return rvalue;
-}
 
 /** @brief Function for calculating CRC-16 in blocks. Conforms to CRC-CCITT (0xFFFF)*/
 static uint16_t calculate_crc16 (const uint8_t * p_data,
@@ -97,18 +68,22 @@ static void add_crc16 (uint8_t * const buffer,
 static bool check_crc (const uint8_t * const buffer,
                        const uint32_t written)
 {
+    bool state = false;
     uint16_t crc16 = RE_CA_CRC_INVALID;
     uint16_t p_crc = RE_CA_CRC_DEFAULT;
     uint16_t in_crc = * ( (uint16_t *) &buffer[written]);
     crc16 = calculate_crc16 (buffer + RE_CA_UART_STX_ETX_LEN,
                              written - RE_CA_UART_STX_ETX_LEN, &p_crc);
 
-    if (in_crc != crc16)
+    if (crc16 != RE_CA_CRC_INVALID)
     {
-        return false;
+        if (in_crc == crc16)
+        {
+            state = true;
+        }
     }
 
-    return true;
+    return state;
 }
 
 static inline int8_t u8toi8 (const uint8_t byte)
@@ -305,12 +280,10 @@ static re_status_t re_ca_uart_decode_device_id (const uint8_t * const buffer,
     else
     {
         payload->cmd = buffer[RE_CA_UART_CMD_INDEX];
-        payload->params.device_id.id = array_to_u64 (buffer + RE_CA_UART_PAYLOAD_INDEX,
-                                       RE_CA_UART_DEVICE_ID_LEN);
-        payload->params.device_id.addr = array_to_u64 (buffer + RE_CA_UART_PAYLOAD_INDEX
-                                         + RE_CA_UART_DELIMITER_LEN
-                                         + RE_CA_UART_DEVICE_ID_LEN,
-                                         RE_CA_UART_DEVICE_ADDR_LEN);
+        payload->params.device_id.id = * ( (uint64_t *) &buffer[RE_CA_UART_PAYLOAD_INDEX]);
+        payload->params.device_id.addr = * ( (uint64_t *) &buffer[RE_CA_UART_PAYLOAD_INDEX
+                                             + RE_CA_UART_DELIMITER_LEN
+                                             + RE_CA_UART_DEVICE_ID_LEN]);
     }
 
     return err_code;
@@ -323,24 +296,6 @@ static re_status_t re_ca_uart_decode_get_device_id (const uint8_t * const buffer
 
     if (buffer[RE_CA_UART_LEN_INDEX] != (RE_CA_UART_GET_DEVICE_ID_LEN
                                          + (RE_CA_UART_GET_DEVICE_ID_FIELDS * RE_CA_UART_DELIMITER_LEN)))
-    {
-        err_code |= RE_ERROR_DECODING_LEN;
-    }
-    else
-    {
-        payload->cmd = buffer[RE_CA_UART_CMD_INDEX];
-    }
-
-    return err_code;
-}
-
-static re_status_t re_ca_uart_decode_get_all (const uint8_t * const buffer,
-        re_ca_uart_payload_t * const payload)
-{
-    re_status_t err_code = RE_SUCCESS;
-
-    if (buffer[RE_CA_UART_LEN_INDEX] != (RE_CA_UART_GET_ALL_LEN
-                                         + (RE_CA_UART_GET_ALL_FIELDS * RE_CA_UART_DELIMITER_LEN)))
     {
         err_code |= RE_ERROR_DECODING_LEN;
     }
@@ -545,10 +500,6 @@ re_status_t re_ca_uart_decode (const uint8_t * const buffer,
                 err_code |=  re_ca_uart_decode_get_device_id (buffer, payload);
                 break;
 
-            case RE_CA_UART_GET_ALL:
-                err_code |=  re_ca_uart_decode_get_all (buffer, payload);
-                break;
-
             default:
                 err_code |= RE_ERROR_DECODING_CMD;
                 break;
@@ -711,11 +662,14 @@ static re_status_t re_ca_uart_encode_device_id (uint8_t * const buffer,
                                        + (RE_CA_UART_DEVICE_ID_FIELDS * RE_CA_UART_DELIMITER_LEN);
         buffer[RE_CA_UART_CMD_INDEX] = payload->cmd;
         written += RE_CA_UART_HEADER_SIZE;
-        u64_to_array (payload->params.device_id.id, buffer + written, RE_CA_UART_DEVICE_ID_LEN);
+        memcpy (buffer + written,
+                (void *) &payload->params.device_id.id,
+                RE_CA_UART_DEVICE_ID_LEN);
         written += RE_CA_UART_DEVICE_ID_LEN;
         buffer[written++] = RE_CA_UART_FIELD_DELIMITER;
-        u64_to_array (payload->params.device_id.addr, buffer + written,
-                      RE_CA_UART_DEVICE_ADDR_LEN);
+        memcpy (buffer + written,
+                (void *) &payload->params.device_id.id,
+                RE_CA_UART_DEVICE_ADDR_LEN);
         written += RE_CA_UART_DEVICE_ADDR_LEN;
         buffer[written++] = RE_CA_UART_FIELD_DELIMITER;
         add_crc16 (buffer, &written);
@@ -802,33 +756,6 @@ static re_status_t re_ca_uart_encode_all (uint8_t * const buffer,
     return err_code;
 }
 
-static re_status_t re_ca_uart_encode_get_all (uint8_t * const buffer,
-        uint8_t * const buf_len,
-        const re_ca_uart_payload_t * const payload)
-{
-    re_status_t err_code = RE_SUCCESS;
-    uint32_t written = 0;
-
-    if (RE_CA_UART_TX_MAX_LEN > *buf_len)
-    {
-        err_code |= RE_ERROR_DATA_SIZE;
-    }
-    else
-    {
-        buffer[RE_CA_UART_STX_INDEX] = RE_CA_UART_STX;
-        // Payload length is different from total message length.
-        buffer[RE_CA_UART_LEN_INDEX] = RE_CA_UART_GET_ALL_LEN + (RE_CA_UART_ALL_FIELDS *
-                                       RE_CA_UART_GET_ALL_FIELDS);
-        buffer[RE_CA_UART_CMD_INDEX] = payload->cmd;
-        written += RE_CA_UART_HEADER_SIZE;
-        add_crc16 (buffer, &written);
-        buffer[written++] = RE_CA_UART_ETX;
-        *buf_len = written;
-    }
-
-    return err_code;
-}
-
 re_status_t re_ca_uart_encode (uint8_t * const buffer, uint8_t * const buf_len,
                                const re_ca_uart_payload_t * const payload)
 {
@@ -884,10 +811,6 @@ re_status_t re_ca_uart_encode (uint8_t * const buffer, uint8_t * const buf_len,
                 err_code |=  re_ca_uart_encode_get_device_id (buffer, buf_len, payload);
                 break;
 
-            case RE_CA_UART_GET_ALL:
-                err_code |= re_ca_uart_encode_get_all (buffer, buf_len, payload);
-                break;
-
             default:
                 err_code |= RE_ERROR_INVALID_PARAM;
                 break;
@@ -896,5 +819,3 @@ re_status_t re_ca_uart_encode (uint8_t * const buffer, uint8_t * const buf_len,
 
     return err_code;
 }
-
-#endif

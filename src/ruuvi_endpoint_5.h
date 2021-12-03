@@ -10,54 +10,37 @@
 #define RUUVI_ENDPOINT_5_H
 #include "ruuvi_endpoints.h"
 
-#define RE_5_DESTINATION          (0x05U)
-#define RE_5_INVALID_TEMPERATURE  (0x8000U)
-#define RE_5_INVALID_HUMIDITY     (0xFFFFU)
-#define RE_5_INVALID_PRESSURE     (0xFFFFU)
-#define RE_5_INVALID_ACCELERATION (0x8000U)
-#define RE_5_INVALID_SEQUENCE     (0xFFFFU)
-#define RE_5_INVALID_MOVEMENT     (0xFFU)
-#define RE_5_INVALID_VOLTAGE      (0x07FFU)
-#define RE_5_INVALID_POWER        (0x1FU)
-#define RE_5_INVALID_MAC          (0xFFFFFFFFFFFFU)
-#define RE_5_DATA_LENGTH          (24U)
+#define RE_5_DESTINATION          0x05
+#define RE_5_INVALID_TEMPERATURE  0x8000
+#define RE_5_INVALID_HUMIDITY     0xFFFF
+#define RE_5_INVALID_PRESSURE     0xFFFF
+#define RE_5_INVALID_ACCELERATION 0x8000
+#define RE_5_INVALID_SEQUENCE     0xFFFF
+#define RE_5_INVALID_MOVEMENT     0xFF
+#define RE_5_INVALID_VOLTAGE      0x07FF
+#define RE_5_INVALID_POWER        0x1F
+#define RE_5_INVALID_MAC          0xFFFFFFFFFFFF
+#define RE_5_DATA_LENGTH          24
 
-#define RE_5_TEMP_MAX          (163.835f)
-#define RE_5_TEMP_MIN          (-163.835f)
-#define RE_5_HUMI_MAX          (163.835f)
-#define RE_5_HUMI_MIN          (0.0f)
-#define RE_5_PRES_MAX          (115534.0f)
-#define RE_5_PRES_MIN          (50000.0f)
-#define RE_5_ACC_MAX           (32.767f)
-#define RE_5_ACC_MIN           (-32.767f)
-#define RE_5_VOLTAGE_MAX       (3.646f)
-#define RE_5_VOLTAGE_MIN       (1.6f)
-#define RE_5_TXPWR_MAX         (20)
-#define RE_5_TXPWR_MIN         (-40)
-#define RE_5_MVTCTR_MAX        (254)
-#define RE_5_MVTCTR_MIN        (0)
-#define RE_5_SEQCTR_MAX        (65534)
-#define RE_5_SEQCTR_MIN        (0)
-
-#define RE_5_OFFSET_HEADER     (0U)
-#define RE_5_OFFSET_TEMP_MSB   (1U)
-#define RE_5_OFFSET_TEMP_LSB   (2U)
-#define RE_5_OFFSET_HUMI_MSB   (3U)
-#define RE_5_OFFSET_HUMI_LSB   (4U)
-#define RE_5_OFFSET_PRES_MSB   (5U)
-#define RE_5_OFFSET_PRES_LSB   (6U)
-#define RE_5_OFFSET_ACCX_MSB   (7U)
-#define RE_5_OFFSET_ACCX_LSB   (8U)
-#define RE_5_OFFSET_ACCY_MSB   (9U)
-#define RE_5_OFFSET_ACCY_LSB   (10U)
-#define RE_5_OFFSET_ACCZ_MSB   (11U)
-#define RE_5_OFFSET_ACCZ_LSB   (12U)
-#define RE_5_OFFSET_POWER_MSB  (13U)
-#define RE_5_OFFSET_POWER_LSB  (14U)
-#define RE_5_OFFSET_MVTCTR     (15U)
-#define RE_5_OFFSET_SEQCTR_MSB (16U)
-#define RE_5_OFFSET_SEQCTR_LSB (17U)
-#define RE_5_OFFSET_ADDR_MSB   (18U)
+#define RE_5_OFFSET_HEADER               0
+#define RE_5_OFFSET_TEMPERATURE_MSB      1
+#define RE_5_OFFSET_TEMPERATURE_LSB      2
+#define RE_5_OFFSET_HUMIDITY_MSB         3
+#define RE_5_OFFSET_HUMIDITY_LSB         4
+#define RE_5_OFFSET_PRESSURE_MSB         5
+#define RE_5_OFFSET_PRESSURE_LSB         6
+#define RE_5_OFFSET_ACCELERATIONX_MSB    7
+#define RE_5_OFFSET_ACCELERATIONX_LSB    8
+#define RE_5_OFFSET_ACCELERATIONY_MSB    9
+#define RE_5_OFFSET_ACCELERATIONY_LSB    10
+#define RE_5_OFFSET_ACCELERATIONZ_MSB    11
+#define RE_5_OFFSET_ACCELERATIONZ_LSB    12
+#define RE_5_OFFSET_POWER_MSB            13
+#define RE_5_OFFSET_POWER_LSB            14
+#define RE_5_OFFSET_MOVEMENT_COUNTER     15
+#define RE_5_OFFSET_SEQUENCE_COUNTER_MSB 16
+#define RE_5_OFFSET_SEQUENCE_COUNTER_LSB 17
+#define RE_5_OFFSET_ADDRESS_MSB          18
 
 /** @brief All data required for Ruuvi dataformat 5 package. */
 typedef struct
@@ -96,7 +79,8 @@ typedef struct
  *            for encoding the data into buffer.
  * @retval RE_SUCCESS if data was encoded successfully.
  */
-re_status_t re_5_encode (uint8_t * const buffer, const re_5_data_t * data);
+re_status_t re_5_encode (uint8_t * const buffer,
+                         const re_5_data_t * data);
 
 
 #endif
