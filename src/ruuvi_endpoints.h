@@ -1,9 +1,20 @@
 #ifndef RUUVI_ENDPOINTS_H
 #define RUUVI_ENDPOINTS_H
 
+#ifdef APPLICATION_ENDPOINTS_CONFIGURED
+#   include "app_config.h"
+#else
+#   define RE_3_ENABLED  (1U)
+#   define RE_5_ENABLED  (1U)
+#   define RE_8_ENABLED  (1U)
+#   define RE_CA_ENABLED (1U)
+#   define RE_FA_ENABLED (1U)
+#   define RE_IBEACON_ENABLED (1U)
+#endif
+
 #include <stdint.h>
 
-#define RUUVI_ENDPOINTS_SEMVER "3.0.0"     //!< SEMVER of endpoints.
+#define RUUVI_ENDPOINTS_SEMVER "3.2.1"          //!< SEMVER of endpoints.
 
 #define RE_SUCCESS                  (0U)
 #define RE_ERROR_DATA_SIZE          (1U << 3U)  //!< Data size too large/small.
@@ -17,7 +28,7 @@
 #define RE_ERROR_DECODING_ETX       (1U << 17U) //!< Data decoding etx failed.
 #define RE_ERROR_DECODING_CRC       (1U << 18U) //!< Data decoding crc failed.
 #define RE_ERROR_DECODING_CMD       (1U << 19U) //!< Data decoding cmd failed.
-#define RE_ERROR_NOT_IMPLEMENTED    (1U << 24U)   //!< Not implemented yet.
+#define RE_ERROR_NOT_IMPLEMENTED    (1U << 24U) //!< Not implemented yet.
 
 typedef uint32_t re_status_t; //!< Status code
 typedef float    re_float;    //!< Ruuvi endpoint float type
@@ -60,6 +71,7 @@ typedef float    re_float;    //!< Ruuvi endpoint float type
                                                     RE_STANDARD_OP_READ_BIT)
 
 #define RE_STANDARD_OP_TIMEOUT                 (0xF0)  //!< Internal timeout, aborting operation.
+#define RE_STANDARD_OP_UNAUTHORIZED            (0xFEU) //!< Operation was unauthorized
 #define RE_STANDARD_OP_ERROR                   (0xFFU) //!< internal error has occured
 
 #define RE_LOG_READ_CURRENT_MSB_IDX            (3U)  //!< MSB of current time.
@@ -87,12 +99,13 @@ typedef float    re_float;    //!< Ruuvi endpoint float type
 #define RE_STANDARD_DESTINATION_GYRATION_X     (0x43U) //!< X gyration
 #define RE_STANDARD_DESTINATION_GYRATION_Y     (0x44U) //!< Y gyration
 #define RE_STANDARD_DESTINATION_GYRATION_Z     (0x45U) //!< Z gyration
-#define RE_STANDARD_DESTINATION_ADC_BATTERY    (0x20U) //!< ADC battery vs GND
 #define RE_STANDARD_DESTINATION_TEMPERATURE    (0x30U) //!< Temperature
 #define RE_STANDARD_DESTINATION_HUMIDITY       (0x31U) //!< Humidity
 #define RE_STANDARD_DESTINATION_PRESSURE       (0x32U) //!< Pressure
 #define RE_STANDARD_DESTINATION_ENVIRONMENTAL  (0x3AU) //!< Temp Humi Pres combined.
+#define RE_STANDARD_DESTINATION_ADC_BATTERY    (0x20U) //!< ADC battery vs GND
 #define RE_STANDARD_DESTINATION_RTC            (0x21U) //!< RTC value
+#define RE_STANDARD_DESTINATION_PASSWORD       (0x2AU) //!< Password endpoint.
 
 typedef enum
 {
@@ -107,7 +120,8 @@ typedef enum
     RE_ENV_ALL = RE_STANDARD_DESTINATION_ENVIRONMENTAL,
     RE_ENV_TEMP = RE_STANDARD_DESTINATION_TEMPERATURE,
     RE_ENV_HUMI = RE_STANDARD_DESTINATION_HUMIDITY,
-    RE_ENV_PRES = RE_STANDARD_DESTINATION_PRESSURE
+    RE_ENV_PRES = RE_STANDARD_DESTINATION_PRESSURE,
+    RE_SEC_PASS = RE_STANDARD_DESTINATION_PASSWORD
 } re_type_t;
 
 // Scaling factors float -> i32.
@@ -178,5 +192,23 @@ re_status_t re_log_write_timestamp (uint8_t * const buffer, const uint64_t times
  */
 re_status_t re_log_write_data (uint8_t * const buffer, const re_float data,
                                const uint8_t source);
+
+/**
+ * @brief Clip given float to the given range.
+ *
+ * @param[out] value Value to clip.
+ * @param[in]  min Minimum value. Value pointer will be >= min.
+ * @param[in]  max Maximum value. Value pointer will be <= max.
+ */
+void re_clip (float * const value, const float min, const float max);
+
+/**
+ * @brief Calculate CRC8 checksum of a data array. CRC polynomial is 0x07
+ *
+ * @param[in] DataArray Array to checksum
+ * @param[in] Length Length of data to checksum
+ * @return CRC8 Checksum
+ */
+uint8_t re_calc_crc8 (const uint8_t * DataArray, const uint16_t Length);
 
 #endif

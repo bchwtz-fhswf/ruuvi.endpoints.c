@@ -41,6 +41,12 @@
 #define RE_5_OFFSET_SEQUENCE_COUNTER_MSB 16
 #define RE_5_OFFSET_SEQUENCE_COUNTER_LSB 17
 #define RE_5_OFFSET_ADDRESS_MSB          18
+#define RE_5_MVTCTR_MAX        (254)
+#define RE_5_MVTCTR_MIN        (0)
+#define RE_5_SEQCTR_MAX        (65534)
+#define RE_5_SEQCTR_MIN        (0)
+
+
 
 /** @brief All data required for Ruuvi dataformat 5 package. */
 typedef struct
