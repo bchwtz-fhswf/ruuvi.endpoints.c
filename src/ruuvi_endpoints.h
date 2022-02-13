@@ -16,7 +16,7 @@
 
 #define RUUVI_ENDPOINTS_SEMVER "3.2.1"          //!< SEMVER of endpoints.
 
-#define RE_SUCCESS                  (0U)
+#define RE_SUCCESS                  (0U)        //!< Encoded successfully.
 #define RE_ERROR_DATA_SIZE          (1U << 3U)  //!< Data size too large/small.
 #define RE_ERROR_INVALID_PARAM      (1U << 4U)  //!< Invalid Parameter.
 #define RE_ERROR_NULL               (1U << 11U) //!< Null Pointer.
@@ -30,8 +30,8 @@
 #define RE_ERROR_DECODING_CMD       (1U << 19U) //!< Data decoding cmd failed.
 #define RE_ERROR_NOT_IMPLEMENTED    (1U << 24U) //!< Not implemented yet.
 
-typedef uint32_t re_status_t; //!< Status code
-typedef float    re_float;    //!< Ruuvi endpoint float type
+typedef uint32_t re_status_t;                   //!< Status code
+typedef float    re_float;                      //!< Ruuvi endpoint float type
 
 /**
  *  Ruuvi Standard Message consists of 11 bytes: 3 are a header, 8 are payload.
@@ -125,12 +125,12 @@ typedef enum
 } re_type_t;
 
 // Scaling factors float -> i32.
-#define RE_STANDARD_ACCELERATION_SF            (1000.0F) //!< milli-mg.
-#define RE_STANDARD_GYRATION_SF                (1000.0F) //!< milli-dps.
-#define RE_STANDARD_VOLTAGE_SF                 (1000.0F) //!< milli-V.
-#define RE_STANDARD_TEMPERATURE_SF             (100.0F)  //!< centi-C.
-#define RE_STANDARD_HUMIDITY_SF                (100.0F)  //!< centi-RH%.
-#define RE_STANDARD_PRESSURE_SF                (1.0F)    //!< Pa.
+#define RE_STANDARD_ACCELERATION_SF            (1000.0F)    //!< milli-mg.
+#define RE_STANDARD_GYRATION_SF                (1000.0F)    //!< milli-dps.
+#define RE_STANDARD_VOLTAGE_SF                 (1000.0F)    //!< milli-V.
+#define RE_STANDARD_TEMPERATURE_SF             (100.0F)     //!< centi-C.
+#define RE_STANDARD_HUMIDITY_SF                (100.0F)     //!< centi-RH%.
+#define RE_STANDARD_PRESSURE_SF                (1.0F)       //!< Pa.
 #define RE_STANDARD_INVALID_I32                (0xFFFFFFFF) //!< Error value.
 
 typedef enum
