@@ -74,22 +74,22 @@ typedef float    re_float;                      //!< Ruuvi endpoint float type
 #define RE_STANDARD_OP_UNAUTHORIZED            (0xFEU) //!< Operation was unauthorized
 #define RE_STANDARD_OP_ERROR                   (0xFFU) //!< internal error has occured
 
-#define RE_LOG_READ_CURRENT_MSB_IDX            (3U)  //!< MSB of current time.
-#define RE_LOG_READ_CURRENT_B2_IDX             (4U)  //!< B2 of current time.
-#define RE_LOG_READ_CURRENT_B3_IDX             (5U)  //!< B3 of current time.
-#define RE_LOG_READ_CURRENT_LSB_IDX            (6U) //!< LSB of current time.
-#define RE_LOG_READ_START_MSB_IDX              (7U)  //!< MSB of first time to read.
-#define RE_LOG_READ_START_B2_IDX               (8U)  //!< B2 of first time to read.
-#define RE_LOG_READ_START_B3_IDX               (9U)  //!< B3 of first time to read.
-#define RE_LOG_READ_START_LSB_IDX              (10U)  //!< LSB of first time to read.
-#define RE_LOG_WRITE_TS_MSB_IDX                (3U)  //!< MSB of timestamp.
-#define RE_LOG_WRITE_TS_B2_IDX                 (4U)  //!< B2 of timestamp.
-#define RE_LOG_WRITE_TS_B3_IDX                 (5U)  //!< B3 of timestamp.
-#define RE_LOG_WRITE_TS_LSB_IDX                (6U)  //!< LSB of timestamp.
-#define RE_LOG_WRITE_VALUE_MSB_IDX             (7U)  //!< MSB of value.
-#define RE_LOG_WRITE_VALUE_B2_IDX              (8U)  //!< B2 of value.
-#define RE_LOG_WRITE_VALUE_B3_IDX              (9U)  //!< B3 of value.
-#define RE_LOG_WRITE_VALUE_LSB_IDX             (10U) //!< LSB of value.
+#define RE_LOG_READ_CURRENT_MSB_IDX            (3U)    //!< MSB of current time.
+#define RE_LOG_READ_CURRENT_B2_IDX             (4U)    //!< B2 of current time.
+#define RE_LOG_READ_CURRENT_B3_IDX             (5U)    //!< B3 of current time.
+#define RE_LOG_READ_CURRENT_LSB_IDX            (6U)    //!< LSB of current time.
+#define RE_LOG_READ_START_MSB_IDX              (7U)    //!< MSB of first time to read.
+#define RE_LOG_READ_START_B2_IDX               (8U)    //!< B2 of first time to read.
+#define RE_LOG_READ_START_B3_IDX               (9U)    //!< B3 of first time to read.
+#define RE_LOG_READ_START_LSB_IDX              (10U)   //!< LSB of first time to read.
+#define RE_LOG_WRITE_TS_MSB_IDX                (3U)    //!< MSB of timestamp.
+#define RE_LOG_WRITE_TS_B2_IDX                 (4U)    //!< B2 of timestamp.
+#define RE_LOG_WRITE_TS_B3_IDX                 (5U)    //!< B3 of timestamp.
+#define RE_LOG_WRITE_TS_LSB_IDX                (6U)    //!< LSB of timestamp.
+#define RE_LOG_WRITE_VALUE_MSB_IDX             (7U)    //!< MSB of value.
+#define RE_LOG_WRITE_VALUE_B2_IDX              (8U)    //!< B2 of value.
+#define RE_LOG_WRITE_VALUE_B3_IDX              (9U)    //!< B3 of value.
+#define RE_LOG_WRITE_VALUE_LSB_IDX             (10U)   //!< LSB of value.
 
 #define RE_STANDARD_DESTINATION_ACCELERATION   (0x4AU) //!< XYZ acceleration combined
 #define RE_STANDARD_DESTINATION_ACCELERATION_X (0x40U) //!< X acceleration
@@ -109,15 +109,15 @@ typedef float    re_float;                      //!< Ruuvi endpoint float type
 
 typedef enum
 {
-    RE_ACC_XYZ = RE_STANDARD_DESTINATION_ACCELERATION,
-    RE_ACC_X = RE_STANDARD_DESTINATION_ACCELERATION_X,
-    RE_ACC_Y = RE_STANDARD_DESTINATION_ACCELERATION_Y,
-    RE_ACC_Z = RE_STANDARD_DESTINATION_ACCELERATION_Z,
-    RE_GYR_XYZ = RE_STANDARD_DESTINATION_GYRATION,
-    RE_GYR_X = RE_STANDARD_DESTINATION_GYRATION_X,
-    RE_GYR_Y = RE_STANDARD_DESTINATION_GYRATION_Y,
-    RE_GYR_Z = RE_STANDARD_DESTINATION_GYRATION_Z,
-    RE_ENV_ALL = RE_STANDARD_DESTINATION_ENVIRONMENTAL,
+    RE_ACC_XYZ  = RE_STANDARD_DESTINATION_ACCELERATION,
+    RE_ACC_X    = RE_STANDARD_DESTINATION_ACCELERATION_X,
+    RE_ACC_Y    = RE_STANDARD_DESTINATION_ACCELERATION_Y,
+    RE_ACC_Z    = RE_STANDARD_DESTINATION_ACCELERATION_Z,
+    RE_GYR_XYZ  = RE_STANDARD_DESTINATION_GYRATION,
+    RE_GYR_X    = RE_STANDARD_DESTINATION_GYRATION_X,
+    RE_GYR_Y    = RE_STANDARD_DESTINATION_GYRATION_Y,
+    RE_GYR_Z    = RE_STANDARD_DESTINATION_GYRATION_Z,
+    RE_ENV_ALL  = RE_STANDARD_DESTINATION_ENVIRONMENTAL,
     RE_ENV_TEMP = RE_STANDARD_DESTINATION_TEMPERATURE,
     RE_ENV_HUMI = RE_STANDARD_DESTINATION_HUMIDITY,
     RE_ENV_PRES = RE_STANDARD_DESTINATION_PRESSURE,
