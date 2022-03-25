@@ -46,6 +46,7 @@ typedef float    re_float;                      //!< Ruuvi endpoint float type
 #define RE_STANDARD_PAYLOAD_LENGTH      (8U)
 #define RE_STANDARD_MESSAGE_LENGTH      (RE_STANDARD_HEADER_LENGTH + \
                                             RE_STANDARD_PAYLOAD_LENGTH)
+#define RE_STANDARD_DESTINATION_SYS_CONFIG (0x22U)
 
 /**
  * @brief If endpoint is even, type of a message is considered a write.
@@ -68,6 +69,10 @@ typedef float    re_float;                      //!< Ruuvi endpoint float type
                                                     RE_STANDARD_OP_READ_BIT)
 #define RE_STANDARD_LOG_VALUE_WRITE            (0x10U)
 #define RE_STANDARD_LOG_VALUE_READ             (RE_STANDARD_LOG_VALUE_WRITE | \
+                                                    RE_STANDARD_OP_READ_BIT)
+
+#define RE_SYS_CONFIG_WRITE_HEARTBEAT          (0xF2U)
+#define RE_SYS_CONFIG_READ_HEARTBEAT           (RE_SYS_CONFIG_WRITE_HEARTBEAT | \
                                                     RE_STANDARD_OP_READ_BIT)
 
 #define RE_STANDARD_OP_TIMEOUT                 (0xF0)  //!< Internal timeout, aborting operation.
