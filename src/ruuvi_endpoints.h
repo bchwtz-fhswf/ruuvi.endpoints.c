@@ -75,6 +75,10 @@ typedef float    re_float;                      //!< Ruuvi endpoint float type
 #define RE_SYS_CONFIG_READ_HEARTBEAT           (RE_SYS_CONFIG_WRITE_HEARTBEAT | \
                                                     RE_STANDARD_OP_READ_BIT)
 
+#define RE_STANDARD_SENSOR_CONFIGURATION_SETNUM (0x0AU)
+#define RE_STANDARD_SENSOR_CONFIGURATION_GETNUM (RE_STANDARD_SENSOR_CONFIGURATION_SETNUM | \
+                                                    RE_STANDARD_OP_READ_BIT)
+
 #define RE_STANDARD_OP_TIMEOUT                 (0xF0)  //!< Internal timeout, aborting operation.
 #define RE_STANDARD_OP_UNAUTHORIZED            (0xFEU) //!< Operation was unauthorized
 #define RE_STANDARD_OP_ERROR                   (0xFFU) //!< internal error has occured
